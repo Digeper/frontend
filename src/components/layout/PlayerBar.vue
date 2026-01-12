@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-0 left-64 right-0 h-24 bg-vibrant-bg pixel-texture border-t-3 border-vibrant-pink z-50">
+  <div class="fixed bottom-0 left-64 right-0 h-24 bg-pinkish-white pixel-texture border-t-3 border-vibrant-pink z-50">
     <div class="flex items-center h-full px-4">
       <!-- Current Song Info -->
       <div class="flex items-center space-x-4 w-1/4 min-w-[180px]">

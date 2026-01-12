@@ -19,6 +19,7 @@ export default {
         'vibrant-cyan': '#00ffff',
         'vibrant-yellow': '#ffff00',
         'vibrant-green': '#00ff00',
+        'pinkish-white': '#fff5f5',
       },
     },
   },
