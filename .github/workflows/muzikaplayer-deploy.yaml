@@ -63,16 +63,13 @@ jobs:
           echo "image_tag=${IMAGE_TAG}" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        working-directory: MuzikaPlayer
         run: npm ci
 
       - name: Build application
         if: ${{ github.event.inputs.skip_build != 'true' }}
-        working-directory: MuzikaPlayer
         run: npm run build
 
       - name: Verify build output
-        working-directory: MuzikaPlayer
         run: |
           if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
             echo "ERROR: dist folder is empty or does not exist"
@@ -110,7 +107,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./MuzikaPlayer
+          context: .
           push: true
           tags: |
             ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.build.outputs.image_tag }}
@@ -175,13 +172,13 @@ jobs:
 
       - name: Update manifests
         run: |
-          cd MuzikaPlayer/k8s
+          cd k8s
           sed -i "s/newTag: .*/newTag: ${{ needs.build.outputs.image_tag }}/" kustomization.yaml
           sed -i "s/\${ACR_NAME}/${{ secrets.ACR_NAME }}/g" deployment.yaml kustomization.yaml
 
       - name: Deploy MuzikaPlayer
         run: |
-          cd MuzikaPlayer/k8s
+          cd k8s
           kubectl apply -k .
           kubectl rollout status deployment/muzikaplayer -n muzika --timeout=300s
 
