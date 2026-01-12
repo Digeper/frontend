@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="p-6 bg-pinkish-white">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Queue</h2>
       <button

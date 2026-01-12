@@ -3,7 +3,7 @@
     <div
       v-for="(playlistSong, index) in songs"
       :key="playlistSong.songId"
-      class="flex items-center space-x-4 px-4 py-2 pixel-texture hover:bg-vibrant-bg-hover group cursor-pointer transition-colors"
+      class="flex items-center space-x-4 px-4 py-2 pixel-texture bg-pinkish-white hover:bg-pinkish-white-hover group cursor-pointer transition-colors"
       @click="handlePlay(playlistSong)"
     >
       <div class="w-10 h-10 bg-vibrant-pink-light pixel-border border-vibrant-pink flex items-center justify-center flex-shrink-0 relative overflow-hidden">

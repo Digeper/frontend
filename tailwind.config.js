@@ -20,6 +20,7 @@ export default {
         'vibrant-yellow': '#ffff00',
         'vibrant-green': '#00ff00',
         'pinkish-white': '#fff5f5',
+        'pinkish-white-hover': '#ffe0e0',
       },
     },
   },
