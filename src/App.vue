@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-vibrant-bg">
+  <div class="min-h-screen bg-vibrant-sky" style="background-color: #00d4ff;">
     <router-view v-slot="{ Component, route }">
       <Transition name="fade" mode="out-in">
         <component :is="Component" :key="route.path" />

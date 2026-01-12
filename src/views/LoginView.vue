@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-vibrant-bg flex items-center justify-center px-4">
+  <div class="min-h-screen bg-vibrant-sky flex items-center justify-center px-4">
     <div class="w-full max-w-md">
       <div class="text-center mb-8">
         <h1 class="text-5xl font-bold text-gray-900 mb-2">Digeper</h1>
