@@ -1,0 +1,20 @@
+# Kustomization for MuzikaPlayer
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: muzika
+
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - networkpolicy.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/managed-by: kustomize
+      app.kubernetes.io/part-of: muzika-platform
+
+images:
+  - name: ${ACR_NAME}.azurecr.io/muzika/muzikaplayer
+    newTag: latest

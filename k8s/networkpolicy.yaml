@@ -1,0 +1,68 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: muzikaplayer-network-policy
+  namespace: muzika
+spec:
+  podSelector:
+    matchLabels:
+      app: muzikaplayer
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from ingress-nginx namespace (for ingress controller)
+    - from:
+        - namespaceSelector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
+    # Allow Azure Load Balancer health probes (required for Azure infrastructure)
+    - from:
+        - ipBlock:
+            cidr: 168.63.129.16/32
+      ports:
+        - protocol: TCP
+          port: 80
+    # Allow Azure Virtual Network IP range (adjust CIDR based on your AKS subnet)
+    - from:
+        - ipBlock:
+            cidr: 10.0.0.0/8
+      ports:
+        - protocol: TCP
+          port: 80
+  egress:
+    # DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow access to backend API services in muzika namespace
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: muzika
+      ports:
+        - protocol: TCP
+          port: 8090  # QueueManager
+        - protocol: TCP
+          port: 8091  # AuthorizationManager
+        - protocol: TCP
+          port: 8092  # PlaylistManager
+        - protocol: TCP
+          port: 8080  # BandcampApi, SlskdDownload
+    # External HTTPS for any external API calls if needed
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
