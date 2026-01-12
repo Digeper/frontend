@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div v-else-if="playlistStore.currentPlaylist" class="relative">
+    <div v-else-if="playlistStore.currentPlaylist && playlistStore.currentPlaylist.playlist" class="relative">
       <!-- Playlist Header -->
       <div
         class="bg-gradient-to-b from-vibrant-purple to-vibrant-bg px-8 pt-16 pb-8"
@@ -30,14 +30,14 @@
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-gray-900 uppercase mb-2">Playlist</p>
             <h1 class="text-5xl font-bold text-gray-900 mb-4 truncate">
-              {{ playlistStore.currentPlaylist.playlist.name }}
+              {{ playlistStore.currentPlaylist.playlist?.name || 'Untitled Playlist' }}
             </h1>
-            <p v-if="playlistStore.currentPlaylist.playlist.description" class="text-gray-700 mb-4">
+            <p v-if="playlistStore.currentPlaylist.playlist?.description" class="text-gray-700 mb-4">
               {{ playlistStore.currentPlaylist.playlist.description }}
             </p>
             <div class="flex items-center space-x-4">
               <span class="text-gray-700 text-sm">
-                {{ playlistStore.currentPlaylist.songs.length }} songs
+                {{ playlistStore.currentPlaylist.songs?.length || 0 }} songs
               </span>
             </div>
           </div>
@@ -78,7 +78,7 @@
 
       <!-- Songs List -->
       <div class="px-8 py-4">
-        <div v-if="playlistStore.currentPlaylist.songs.length === 0" class="text-center py-12">
+        <div v-if="!playlistStore.currentPlaylist.songs || playlistStore.currentPlaylist.songs.length === 0" class="text-center py-12">
           <p class="text-gray-600 mb-4">This playlist is empty</p>
           <p class="text-gray-500 text-sm">Add songs from the queue to get started</p>
         </div>
@@ -145,7 +145,7 @@ const loadSongData = async () => {
   })
   
   // Also check if songs in playlist are in the queue
-  if (playlistStore.currentPlaylist?.songs) {
+  if (playlistStore.currentPlaylist?.songs && Array.isArray(playlistStore.currentPlaylist.songs)) {
     playlistStore.currentPlaylist.songs.forEach(playlistSong => {
       const song = queueStore.songs.find(s => s.id === playlistSong.songId)
       if (song) {
@@ -158,7 +158,7 @@ const loadSongData = async () => {
 }
 
 const handlePlayAll = () => {
-  if (playlistStore.currentPlaylist?.songs) {
+  if (playlistStore.currentPlaylist?.songs && Array.isArray(playlistStore.currentPlaylist.songs)) {
     const songs = playlistStore.currentPlaylist.songs
       .map(ps => songDataMap.value[ps.songId])
       .filter(Boolean)

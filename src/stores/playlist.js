@@ -32,10 +32,25 @@ export const usePlaylistStore = defineStore('playlist', {
       this.loading = true
       this.error = null
       try {
-        this.currentPlaylist = await playlistAPI.getPlaylist(playlistId)
+        const response = await playlistAPI.getPlaylist(playlistId)
+        console.log('Playlist API response:', response)
+        console.log('Response structure:', {
+          hasPlaylist: !!response?.playlist,
+          hasSongs: !!response?.songs,
+          playlistName: response?.playlist?.name,
+          songsCount: response?.songs?.length
+        })
+        this.currentPlaylist = response
+        if (!response || !response.playlist) {
+          console.error('Invalid playlist response structure:', response)
+          this.error = 'Invalid playlist data received from server'
+          return { success: false, error: this.error }
+        }
         return { success: true, data: this.currentPlaylist }
       } catch (error) {
-        this.error = error.response?.data?.error || error.message || 'Failed to fetch playlist'
+        console.error('Error fetching playlist:', error)
+        console.error('Error response:', error.response)
+        this.error = error.response?.data?.error || error.response?.data?.message || error.message || 'Failed to fetch playlist'
         return { success: false, error: this.error }
       } finally {
         this.loading = false

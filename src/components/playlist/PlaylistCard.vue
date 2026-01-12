@@ -34,10 +34,15 @@ const playlistStore = usePlaylistStore()
 
 const handleClick = async () => {
   // Fetch the playlist to load it (but don't add songs to queue)
-  await playlistStore.fetchPlaylist(props.playlist.id)
+  const result = await playlistStore.fetchPlaylist(props.playlist.id)
   
-  // Navigate to the playlist detail page
-  router.push(`/playlist/${props.playlist.id}`)
+  // Only navigate if fetch was successful
+  if (result.success && playlistStore.currentPlaylist) {
+    router.push(`/playlist/${props.playlist.id}`)
+  } else {
+    // Error is already set in the store and will be displayed
+    console.error('Failed to load playlist:', result.error)
+  }
 }
 </script>
 
