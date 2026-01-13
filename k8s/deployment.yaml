@@ -27,6 +27,14 @@ spec:
         app.kubernetes.io/component: frontend
         app.kubernetes.io/part-of: muzika-platform
     spec:
+      # Exclude virtual-kubelet nodes (following QueueManager pattern)
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: virtual-kubelet.io/provider
+                    operator: DoesNotExist
       securityContext:
         runAsNonRoot: true
         runAsUser: 101
@@ -42,7 +50,7 @@ spec:
           resources:
             requests:
               memory: "64Mi"
-              cpu: "50m"
+              cpu: "25m"
             limits:
               memory: "256Mi"
               cpu: "200m"
