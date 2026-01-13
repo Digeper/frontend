@@ -1,6 +1,20 @@
 <template>
   <div class="min-h-screen bg-pinkish-white flex items-center justify-center px-4">
-    <div class="w-full max-w-md">
+    <!-- Post-registration loading overlay -->
+    <div
+      v-if="postRegistrationLoading"
+      class="fixed inset-0 bg-pinkish-white bg-opacity-95 flex items-center justify-center z-50"
+    >
+      <div class="text-center">
+        <div class="inline-block relative w-16 h-16 mb-6">
+          <div class="absolute inset-0 border-4 border-vibrant-pink border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Setting up your account...</h2>
+        <p class="text-gray-600">Please wait while we prepare everything for you</p>
+      </div>
+    </div>
+
+    <div class="w-full max-w-md" :class="{ 'opacity-0 pointer-events-none': postRegistrationLoading }">
       <div class="text-center mb-8">
         <h1 class="text-5xl font-bold text-gray-900 mb-2">Digeper</h1>
         <p class="text-gray-600">A music player that broadens your taste</p>
@@ -91,6 +105,7 @@ const form = ref({
   password: '',
 })
 const errors = ref({})
+const postRegistrationLoading = ref(false)
 
 const isFormValid = computed(() => {
   return form.value.username.trim() && form.value.password.trim() && form.value.password.length >= 6
@@ -124,6 +139,8 @@ const handleSubmit = async () => {
   authStore.clearError()
   
   let result
+  const wasRegistration = !isLogin.value
+  
   if (isLogin.value) {
     result = await authStore.login(form.value.username, form.value.password)
   } else {
@@ -136,7 +153,17 @@ const handleSubmit = async () => {
 
   if (result.success) {
     const redirect = route.query.redirect || '/'
-    router.push(redirect)
+    
+    // For registration, show loading animation and wait 4 seconds before redirecting
+    if (wasRegistration) {
+      postRegistrationLoading.value = true
+      setTimeout(() => {
+        router.push(redirect)
+      }, 4000)
+    } else {
+      // For login, redirect immediately
+      router.push(redirect)
+    }
   }
 }
 </script>
